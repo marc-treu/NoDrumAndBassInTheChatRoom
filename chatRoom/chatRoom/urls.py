@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('lobby/', include("lobby.urls")),
     path("time/", include("timeBomb.urls")),
+    path("tictactoe/", include("ticTacToe.urls")),
     path("traitors/", include("traitorsAboard.urls")),
 ]
