@@ -31,7 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "lobby.apps.LobbyConfig",
+    "lobby",
+    "ticTacToe",
+    "timeBomb",
+    "traitorsAboard",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
