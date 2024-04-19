@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "lobby",
     "ticTacToe",
     "timeBomb",
@@ -71,6 +72,7 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = "chatRoom.asgi.application"
 WSGI_APPLICATION = 'chatRoom.wsgi.application'
 
 
