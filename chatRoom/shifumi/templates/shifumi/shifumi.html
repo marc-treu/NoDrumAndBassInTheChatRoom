@@ -12,18 +12,18 @@
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
-        const socket = new WebSocket(
+        const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
             + '/ws/shifumi/'
         );
 
-        socket.onmessage = function(e) {
+        chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             document.querySelector('#chat-log').value += (data.message + '\n');
         };
 
-        socket.onclose = function(e) {
+        chatSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
         };
 
@@ -37,7 +37,7 @@
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
-            socket.send(JSON.stringify({
+            chatSocket.send(JSON.stringify({
                 'message': message
             }));
             messageInputDom.value = '';
