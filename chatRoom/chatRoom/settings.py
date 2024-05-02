@@ -25,8 +25,14 @@ SECRET_KEY = 'django-insecure-81sfq3*qp2!fsl+&ez9x&cc)=@u_*mzjfyr-7!8kb0a^u98n=m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["3.68.185.77"]
+ALLOWED_HOSTS = ["127.0.0.1", "3.68.185.77"]
 
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 # Application definition
 
@@ -34,6 +40,7 @@ INSTALLED_APPS = [
     "daphne",
     "lobby",
     "ticTacToe",
+    "shifumi",
     "timeBomb",
     "traitorsAboard",
     'django.contrib.admin',

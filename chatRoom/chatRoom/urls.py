@@ -23,4 +23,5 @@ urlpatterns = [
     path("time/", include("timeBomb.urls")),
     path("tictactoe/", include("ticTacToe.urls")),
     path("traitors/", include("traitorsAboard.urls")),
+    path("shifumi/", include("shifumi.urls")),
 ]
