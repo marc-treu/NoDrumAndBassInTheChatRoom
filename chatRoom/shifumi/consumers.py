@@ -15,13 +15,13 @@ class ChatConsumer(WebsocketConsumer):
 
         # Join room group
         async_to_sync(self.channel_layer.group_add)(
-            GAME_GROUP_NAME, self.channel_name
+            GAME_GROUP_NAME + "_chat", self.channel_name
         )
 
     def disconnect(self, close_code):
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
-            GAME_GROUP_NAME, self.channel_name
+            GAME_GROUP_NAME + "_chat", self.channel_name
         )
 
     # Receive message from WebSocket
@@ -31,7 +31,7 @@ class ChatConsumer(WebsocketConsumer):
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
-            GAME_GROUP_NAME, {"type": "chat.message", "message": message}
+            GAME_GROUP_NAME + "_chat", {"type": "chat.message", "message": message}
         )
 
     # Receive message from room group
@@ -53,7 +53,7 @@ class ShifumiConsumer(WebsocketConsumer):
 
         # Join room group
         async_to_sync(self.channel_layer.group_add)(
-            GAME_GROUP_NAME, self.channel_name
+            GAME_GROUP_NAME + "_game", self.channel_name
         )
 
         # self.send(
@@ -63,7 +63,7 @@ class ShifumiConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(
-            GAME_GROUP_NAME, self.channel_name
+            GAME_GROUP_NAME + "_game", self.channel_name
         )
 
     # Receive message from WebSocket
@@ -71,7 +71,7 @@ class ShifumiConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         play = text_data_json["play"]
         async_to_sync(self.channel_layer.group_send)(
-            GAME_GROUP_NAME, {"type": "chat.message", "message": f"{self.player_id} has play {play}", "user": text_data_json["user"]}
+            GAME_GROUP_NAME + "_game", {"type": "chat.message", "message": f"{self.player_id} has play {play}", "user": text_data_json["user"]}
         )
 
     # Receive message from room group

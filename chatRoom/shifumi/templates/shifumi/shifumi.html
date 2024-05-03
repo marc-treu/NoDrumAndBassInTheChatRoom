@@ -48,7 +48,6 @@
 
         gameSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            console.log(data)
             if (data.user !== user) {
                 document.querySelectorAll("button").forEach(e => {e.disabled=false});
             }
