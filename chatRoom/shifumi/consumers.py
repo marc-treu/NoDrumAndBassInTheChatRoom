@@ -21,9 +21,9 @@ class ShifumiConsumer(WebsocketConsumer):
             self.game_group_name, self.channel_name
         )
 
-        self.send(
-            text_data=json.dumps({"type": "playerId", "playerId": self.player_id})
-        )
+        # self.send(
+        #     text_data=json.dumps({"type": "playerId", "playerId": self.player_id})
+        # )
 
     def disconnect(self, close_code):
         # Leave room group
@@ -32,10 +32,16 @@ class ShifumiConsumer(WebsocketConsumer):
         )
 
     # Receive message from WebSocket
-    def receive(self, text_data):
+    def receive(self, text_data, **kwargs):
         text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
+        action = text_data_json.get("action")
+        if action == "send_message":
+            self.handle_message(text_data_json)
+        elif action == "play":
+            self.handle_play(text_data_json)
 
+    def handle_message(self, json):
+        message = json["message"]
         print(self.player_id, " envoie le msg suivant:", message)
 
         # Store the message in cache
@@ -46,6 +52,12 @@ class ShifumiConsumer(WebsocketConsumer):
             self.game_group_name, {"type": "chat.message", "message": message}
         )
 
+    def handle_play(self, json):
+        play = json["play"]
+        async_to_sync(self.channel_layer.group_send)(
+            self.game_group_name, {"type": "chat.message", "message": f"{self.player_id} has play {play}", "user": json["user"]}
+        )
+
     # Receive message from room group
     def chat_message(self, event):
 
@@ -53,4 +65,4 @@ class ShifumiConsumer(WebsocketConsumer):
         print(self.player_id, " Recoie le msg suivant:", message)
 
         # Send message to WebSocket
-        self.send(text_data=json.dumps({"message": message}))
+        self.send(text_data=json.dumps({"message": message, "user": event.get("user")}))

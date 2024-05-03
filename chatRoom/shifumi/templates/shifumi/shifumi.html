@@ -8,9 +8,14 @@
     <textarea id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
+    <button id="play-rock">Rock</button>
+    <button id="play-paper">Paper</button>
+    <button id="play-scissor">Scissor</button>
     {{ room_name|json_script:"room-name" }}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        let user = (Math.random() + 1).toString(36).substring(7);
+        console.log("random", user);
 
         const chatSocket = new WebSocket(
             'ws://'
@@ -20,6 +25,10 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
+            console.log(data);
+            if (data.user !== user) {
+                document.querySelectorAll("input").forEach(e => {e.disabled=false});
+            }
             document.querySelector('#chat-log').value += (data.message + '\n');
         };
 
@@ -38,10 +47,43 @@
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
+                'action': 'send_message',
+                'user': user,
                 'message': message
             }));
             messageInputDom.value = '';
         };
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('button').forEach(button => {
+                button.onclick = (event) => {
+                    document.querySelectorAll("button").forEach(e => {e.disabled=true});
+                    console.log(button)
+                    console.log({
+                        'action': 'play',
+                        'user': user,
+                        'play': button.innerHTML
+                    });
+                    chatSocket.send(JSON.stringify({
+                        'action': 'play',
+                        'user': user,
+                        'play': button.innerHTML
+                    }));
+                }
+            });
+        });
+
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            document.querySelectorAll("button").onclick = function(event) {
+            };
+
+        });
+
     </script>
 </body>
 </html>
