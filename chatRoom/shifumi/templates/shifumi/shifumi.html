@@ -5,7 +5,7 @@
     <title>Chat Room</title>
 </head>
 <body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+    <textarea id="chat-log" cols="100" rows="20" readonly=true></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
     <button id="play-rock">Rock</button>
@@ -13,29 +13,6 @@
     <button id="play-scissor">Scissor</button>
     {{ room_name|json_script:"room-name" }}
     <script>
-        const roomName = JSON.parse(document.getElementById('room-name').textContent);
-        let user = (Math.random() + 1).toString(36).substring(7);
-        console.log("random", user);
-
-        const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/shifumi/'
-        );
-
-        chatSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            console.log(data);
-            if (data.user !== user) {
-                document.querySelectorAll("input").forEach(e => {e.disabled=false});
-            }
-            document.querySelector('#chat-log').value += (data.message + '\n');
-        };
-
-        chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
-
         document.querySelector('#chat-message-input').focus();
         document.querySelector('#chat-message-input').onkeyup = function(e) {
             if (e.key === 'Enter') {  // enter, return
@@ -43,45 +20,63 @@
             }
         };
 
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        let user = (Math.random() + 1).toString(36).substring(7);
+        console.log("random", user);
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+        );
+
+        const gameSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/shifumi/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.querySelector('#chat-log').scrollTop = document.querySelector('#chat-log').scrollHeight;
+            document.querySelector('#chat-log').value += (data.message + '\n');
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        gameSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            console.log(data)
+            if (data.user !== user) {
+                document.querySelectorAll("button").forEach(e => {e.disabled=false});
+            }
+        };
+
+        gameSocket.onclose = function(e) {
+            console.error('Game socket closed unexpectedly');
+        };
+
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
-                'action': 'send_message',
                 'user': user,
                 'message': message
             }));
             messageInputDom.value = '';
         };
 
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('button').forEach(button => {
-                button.onclick = (event) => {
-                    document.querySelectorAll("button").forEach(e => {e.disabled=true});
-                    console.log(button)
-                    console.log({
-                        'action': 'play',
-                        'user': user,
-                        'play': button.innerHTML
-                    });
-                    chatSocket.send(JSON.stringify({
-                        'action': 'play',
-                        'user': user,
-                        'play': button.innerHTML
-                    }));
-                }
-            });
-        });
-
-
-
-
-        document.addEventListener('DOMContentLoaded', function() {
-
-            document.querySelectorAll("button").onclick = function(event) {
-            };
-
+        document.querySelectorAll('button').forEach(button => {
+            button.onclick = () => {
+                document.querySelectorAll("button").forEach(e => {e.disabled=true});
+                gameSocket.send(JSON.stringify({
+                    'event': 'PLAY',
+                    'user': user,
+                    'play': button.innerHTML
+                }));
+            }
         });
 
     </script>
