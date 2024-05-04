@@ -34,14 +34,20 @@ chatSocket.onclose = function(e) {
 
 gameSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
-    if (has_played === true){
-        document.querySelectorAll("button").forEach(e => {e.style.pointerEvents = "none"});
-        has_played = false;
-    } else {
-        document.querySelector('#chat-message-input').focus();
-        document.querySelectorAll("button").forEach(e => {e.style.pointerEvents= "all"});
+    console.log(data)
+    if (data.action === "message"){
+        if (has_played === true){
+            document.querySelectorAll("button").forEach(e => {e.style.pointerEvents = "none"});
+            has_played = false;
+        } else {
+            document.querySelector('#chat-message-input').focus();
+            document.querySelectorAll("button").forEach(e => {e.style.pointerEvents= "all"});
+        }
     }
-};
+    else {
+        alert(data.action);
+    }
+    };
 
 gameSocket.onclose = function(e) {
     console.error('Game socket closed unexpectedly');
