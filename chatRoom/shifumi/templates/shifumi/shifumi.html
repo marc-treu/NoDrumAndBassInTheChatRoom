@@ -1,17 +1,32 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>Chat Room</title>
-    {% load static %}
+    <link rel='stylesheet' href='{% static "/css/shifumi.css" %}'>
 </head>
 <body>
-    <textarea id="chat-log" cols="100" rows="20" readonly=true></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
-    <button id="play-rock">Rock</button>
-    <button id="play-paper">Paper</button>
-    <button id="play-scissor">Scissor</button>
+
+<div class="flex-row">
+    <div class="row-one">
+        <div>
+            <button id="play-rock" class="hover">Rock</button>
+        </div>
+        <div>
+            <button id="play-paper" class="hover">Paper</button>
+        </div>
+        <div>
+            <button id="play-scissor" class="hover">Scissor</button>
+        </div>
+
+    </div>
+    <div class="row-two">
+          <textarea id="chat-log" cols="40" rows="20" readonly=true></textarea><br>
+          <input id="chat-message-input" type="text" size="28">
+          <input id="chat-message-submit" type="button" value="Send">
+      </div>
+    </div>
     {{ room_name|json_script:"room-name" }}
     {% block javascript %}
     <script src = "{% static 'js/shifumi.js' %}"></script>

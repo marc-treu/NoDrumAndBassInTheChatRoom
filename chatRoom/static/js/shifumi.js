@@ -7,6 +7,7 @@ document.querySelector('#chat-message-input').onkeyup = function(e) {
 
 const roomName = JSON.parse(document.getElementById('room-name').textContent);
 let user = (Math.random() + 1).toString(36).substring(7);
+let has_played = false;
 console.log("random", user);
 
 const chatSocket = new WebSocket(
@@ -33,8 +34,12 @@ chatSocket.onclose = function(e) {
 
 gameSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
-    if (data.user !== user) {
-        document.querySelectorAll("button").forEach(e => {e.disabled=false});
+    if (has_played === true){
+        document.querySelectorAll("button").forEach(e => {e.style.pointerEvents = "none"});
+        has_played = false;
+    } else {
+        document.querySelector('#chat-message-input').focus();
+        document.querySelectorAll("button").forEach(e => {e.style.pointerEvents= "all"});
     }
 };
 
@@ -53,8 +58,8 @@ document.querySelector('#chat-message-submit').onclick = function(e) {
 };
 
 document.querySelectorAll('button').forEach(button => {
-    button.onclick = () => {
-        document.querySelectorAll("button").forEach(e => {e.disabled=true});
+    button.onclick = (b) => {
+        has_played = true;
         gameSocket.send(JSON.stringify({
             'event': 'PLAY',
             'user': user,

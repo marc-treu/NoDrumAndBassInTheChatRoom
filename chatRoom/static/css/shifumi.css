@@ -1,0 +1,32 @@
+.flex-row {
+  display: flex;
+  position: relative;
+  flex: 1 1 0%;
+}
+
+.flex-row .row-one {
+  display: flex;
+  flex: 10 1 0%;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-row .row-one div {
+    padding: 30px;
+}
+
+button {
+    border-radius: 8px;
+    background-color: white;
+    color: #33332D;
+    border: 2px solid #33332D;
+    transition-duration: 0.7s;
+    width: 100px;
+    height: 110px;
+}
+
+.hover:hover,
+.hover:focus {
+  background-color: #33332D;
+  color: white;
+}
