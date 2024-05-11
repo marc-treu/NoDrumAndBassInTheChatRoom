@@ -31,13 +31,17 @@ ALLOWED_HOSTS = ["127.0.0.1", "18.153.112.190", "marctr.eu", "www.marctr.eu"]
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
 }
 
 # Application definition
 
 INSTALLED_APPS = [
+    "channels",
     "daphne",
     "lobby",
     "ticTacToe",
