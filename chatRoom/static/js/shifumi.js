@@ -46,6 +46,7 @@ gameSocket.onmessage = function(e) {
     }
     else {
         alert(data.action);
+        has_played = false;
     }
     };
 

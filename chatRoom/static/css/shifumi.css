@@ -1,7 +1,10 @@
+html, body {margin: 0; height: 100%; overflow: hidden}
+
 .flex-row {
   display: flex;
+  height: 98vh;
   position: relative;
-  flex: 1 1 0%;
+  margin: 5px;
 }
 
 .flex-row .row-one {
@@ -20,6 +23,7 @@ button {
     background-color: white;
     color: #33332D;
     border: 2px solid #33332D;
+    box-shadow: 5px -10px #33332D;
     transition-duration: 0.7s;
     width: 100px;
     height: 110px;
@@ -29,4 +33,10 @@ button {
 .hover:focus {
   background-color: #33332D;
   color: white;
+  box-shadow: 5px -10px #e7e7e4;
+}
+
+textarea {
+   height: 90%;
+   resize: none;
 }
