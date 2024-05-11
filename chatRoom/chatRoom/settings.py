@@ -29,14 +29,6 @@ DEBUG = True
 ALLOWED_HOSTS = ["127.0.0.1", "18.153.112.190", "marctr.eu", "www.marctr.eu"]
 
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-        },
-    },
-}
 
 # Application definition
 
@@ -87,6 +79,14 @@ TEMPLATES = [
 ASGI_APPLICATION = "chatRoom.asgi.application"
 WSGI_APPLICATION = 'chatRoom.wsgi.application'
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
