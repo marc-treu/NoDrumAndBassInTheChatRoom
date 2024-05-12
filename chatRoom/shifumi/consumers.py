@@ -77,13 +77,13 @@ class ShifumiConsumer(WebsocketConsumer):
         print(play, self.player_id)
         self.play[self.player_id] = play
 
+        async_to_sync(self.channel_layer.group_send)(
+            GAME_GROUP_NAME + "_game",
+            {"type": "chat.message", "message": f"{self.player_id} has play {play}", "user": text_data_json["user"]}
+        )
+
         if self.has_game_ended():
             self.game_ended()
-        else:
-            async_to_sync(self.channel_layer.group_send)(
-                GAME_GROUP_NAME + "_game",
-                {"type": "chat.message", "message": f"{self.player_id} has play {play}", "user": text_data_json["user"]}
-            )
 
     def game_ended(self):
         print('the game has ended, ', self.play)
@@ -92,7 +92,7 @@ class ShifumiConsumer(WebsocketConsumer):
         player = player2[0]
         action = "win"
 
-        if player1[1] == player2[1]:
+        if player1 == player2[1]:
             action = "tie"
         elif WINNING_RULES[player1] == player2[1]:
             player = self.player_id
