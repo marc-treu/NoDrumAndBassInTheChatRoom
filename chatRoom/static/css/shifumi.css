@@ -31,9 +31,9 @@ button {
 
 .hover:hover,
 .hover:focus {
-  background-color: #33332D;
-  color: white;
-  box-shadow: 5px -10px #e7e7e4;
+  background-color: #33332D !important;
+  color: white !important;
+  box-shadow: 5px -10px #e7e7e4 !important;
 }
 
 textarea {

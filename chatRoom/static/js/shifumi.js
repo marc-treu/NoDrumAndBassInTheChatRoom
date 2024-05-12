@@ -34,21 +34,24 @@ chatSocket.onclose = function(e) {
 
 gameSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
-    console.log(data)
-    if (data.action === "message"){
-        if (has_played === true){
-            document.querySelectorAll("button").forEach(e => {e.style.pointerEvents = "none"});
-            has_played = false;
-        } else {
-            document.querySelector('#chat-message-input').focus();
-            document.querySelectorAll("button").forEach(e => {e.style.pointerEvents= "all"});
-        }
-    }
-    else {
-        alert(data.action);
+    console.log(data, has_played)
+    if (has_played === true){
+        document.querySelectorAll("button").forEach(e => {e.style.pointerEvents = "none"});
         has_played = false;
-    }
+    } else {
+        document.querySelector('#chat-message-input').focus();
+        document.querySelectorAll("button").forEach(e => {
+            e.style.pointerEvents="all";
+            e.style.boxShadow = "5px -10px #33332D";
+            e.style.backgroundColor = 'white' ;
+            e.style.color = '#33332D';
+        });
     };
+    if (data.action !== "message"){
+        document.querySelector('#chat-log').scrollTop = document.querySelector('#chat-log').scrollHeight;
+        document.querySelector('#chat-log').value += ('you ' + data.action + '\n');
+    };
+}
 
 gameSocket.onclose = function(e) {
     console.error('Game socket closed unexpectedly');
@@ -67,6 +70,9 @@ document.querySelector('#chat-message-submit').onclick = function(e) {
 document.querySelectorAll('button').forEach(button => {
     button.onclick = (b) => {
         has_played = true;
+        button.style.boxShadow = "5px -10px #e7e7e4";
+        button.style.backgroundColor = '#33332D' ;
+        button.style.color = 'white';
         gameSocket.send(JSON.stringify({
             'event': 'PLAY',
             'user': user,
